@@ -1,21 +1,13 @@
 import sys
 from storage import load_data, save_data
 from utils import is_expired, is_expiring_soon
-from api import fetch_product_category  # <-- Nova importação
 
 
 def add_item(name, expiry):
     data = load_data()
-    print(f"🔍 Buscando informações de '{name}' na API Open Food Facts...")
-    category = fetch_product_category(name)  # <-- Integração com a API
-    
-    data.append({
-        "name": name, 
-        "expiry": expiry,
-        "category": category  # <-- Novo campo salvo
-    })
+    data.append({"name": name, "expiry": expiry})
     save_data(data)
-    print(f"✅ Item adicionado! Categoria identificada: {category}")
+    print("✅ Item adicionado!")
 
 
 def list_items():
@@ -25,9 +17,7 @@ def list_items():
         return
 
     for item in data:
-        # Fallback caso o item antigo não tenha categoria
-        cat = item.get("category", "Não informada")
-        print(f"{item['name']} [{cat}] - Vence em: {item['expiry']}")
+        print(f"{item['name']} - {item['expiry']}")
 
 
 def list_expiring():
@@ -36,8 +26,7 @@ def list_expiring():
 
     for item in data:
         if is_expiring_soon(item["expiry"]):
-            cat = item.get("category", "Não informada")
-            print(f"⚠️ {item['name']} [{cat}] vence em breve ({item['expiry']})")
+            print(f"⚠️ {item['name']} vence em breve ({item['expiry']})")
             found = True
 
     if not found:
@@ -50,8 +39,7 @@ def list_expired():
 
     for item in data:
         if is_expired(item["expiry"]):
-            cat = item.get("category", "Não informada")
-            print(f"❌ {item['name']} [{cat}] vencido em {item['expiry']}")
+            print(f"❌ {item['name']} vencido em {item['expiry']}")
             found = True
 
     if not found:
@@ -86,9 +74,6 @@ if __name__ == "__main__":
     command = sys.argv[1]
 
     if command == "add":
-        if len(sys.argv) < 4:
-            print("Erro: Use add \"nome\" YYYY-MM-DD")
-            sys.exit(1)
         add_item(sys.argv[2], sys.argv[3])
     elif command == "list":
         list_items()
@@ -97,9 +82,6 @@ if __name__ == "__main__":
     elif command == "expired":
         list_expired()
     elif command == "remove":
-        if len(sys.argv) < 3:
-            print("Erro: informe o nome do item para remover")
-            sys.exit(1)
         remove_item(sys.argv[2])
     else:
         help_menu()

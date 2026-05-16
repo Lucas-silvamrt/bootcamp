@@ -1,10 +1,3 @@
-# Gerenciador de Validade de Alimentos CLI 🚀
-
-> **Link de Execução Pública (CI/CD Deploy Log):** [Visualizar Logs de Execução no GitHub Actions](https://github.com/SEU_USUARIO/SEU_REPOSITORIO/actions)
-
-## Como Executar os Testes de Integração
-```bash
-python -m unittest test_integration.py
 # 🥦 FoodSaver CLI
 
 ## 📌 Problema
